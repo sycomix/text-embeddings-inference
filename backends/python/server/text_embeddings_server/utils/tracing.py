@@ -44,7 +44,7 @@ class UDSOpenTelemetryAioServerInterceptor(OpenTelemetryAioServerInterceptor):
             attributes["rpc.user_agent"] = metadata["user-agent"]
 
         # We use gRPC over a UNIX socket
-        attributes.update({SpanAttributes.NET_TRANSPORT: "unix"})
+        attributes[SpanAttributes.NET_TRANSPORT] = "unix"
 
         return self._tracer.start_as_current_span(
             name=handler_call_details.method,
@@ -56,7 +56,7 @@ class UDSOpenTelemetryAioServerInterceptor(OpenTelemetryAioServerInterceptor):
 
 def setup_tracing(otlp_endpoint: str):
     resource = Resource.create(
-        attributes={"service.name": f"text-embeddings-inference.server"}
+        attributes={"service.name": "text-embeddings-inference.server"}
     )
     span_exporter = OTLPSpanExporter(endpoint=otlp_endpoint, insecure=True)
     span_processor = BatchSpanProcessor(span_exporter)

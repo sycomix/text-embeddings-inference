@@ -37,11 +37,11 @@ def get_model(model_path: Path, dtype: Optional[str]):
 
     if torch.cuda.is_available():
         device = torch.device("cuda")
-    else:
-        if dtype != torch.float32:
-            raise ValueError("CPU device only supports float32 dtype")
+    elif dtype == torch.float32:
         device = torch.device("cpu")
 
+    else:
+        raise ValueError("CPU device only supports float32 dtype")
     config = AutoConfig.from_pretrained(model_path)
 
     if config.model_type == "bert":
